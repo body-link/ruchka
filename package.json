@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.1.5",
+    "@emotion/styled": "^11.1.5",
+    "@material-ui/core": "^4.11.3",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.3",
@@ -10,6 +13,8 @@
     "@types/node": "^12.20.7",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
+    "material-ui-next": "npm:@material-ui/core@^5.0.0-alpha.28",
+    "qs": "^6.5.2",
     "react": "^17.0.2",
     "react-admin": "^3.13.5",
     "react-dom": "^17.0.2",
@@ -41,6 +46,7 @@
     ]
   },
   "devDependencies": {
+    "@types/qs": "^6.9.6",
     "prettier": "^2.2.1"
   }
 }

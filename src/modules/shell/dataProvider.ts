@@ -1,4 +1,4 @@
-import { DataProvider } from 'ra-core';
+import { DataProvider } from 'react-admin';
 
 export const dataProvider: DataProvider = {
   getList: (resource, params) => {
