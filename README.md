@@ -2,6 +2,8 @@
 
 > GUI client for [Tachka](https://github.com/body-link/tachka)
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6dd68436-3ff9-4a3d-b8ca-002ac8c9940e/deploy-status)](https://app.netlify.com/sites/ruchka/deploys)
+
 ## Usage
 
 It's better to deploy this code on Netlify and use your own version for more privacy. This way you can be sure that your credentials will be better protected from being viewed by third parties. Anyway you can use the [public client](https://ruchka.netlify.app), but keep in mind that it would be better if you host the client yourself.
