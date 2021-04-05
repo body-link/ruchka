@@ -4,27 +4,14 @@ import { TNullable, TOption } from '../../generic/supply/type-utils';
 import { IResOk } from './types/common';
 import { IRecord, IRecordListQuery } from './types/record';
 import { IAutomationStatusItem } from './types/automation';
+import { AuthError } from './utils';
 
 export class TachkaClient {
-  public origin: TOption<string> = window.localStorage.getItem(this.lsKey) ?? undefined;
-
-  constructor(private prefix: string) {}
-
-  get lsKey() {
-    return `_RCHK_${this.prefix}`;
-  }
-
-  setOrigin(url: string) {
-    this.origin = url.trim().replace(/\/+$/, '');
-    window.localStorage.setItem(this.lsKey, this.origin);
-  }
-
-  removeOrigin() {
-    window.localStorage.removeItem(this.lsKey);
-  }
+  public endpoint: TOption<string>;
+  public token: TOption<string>;
 
   login(secret: string) {
-    return this.post<IResOk>('login', { secret });
+    return this.post<{ token: string }>('login', { secret });
   }
 
   logout() {
@@ -79,29 +66,34 @@ export class TachkaClient {
   }
 
   private async fetch<T>(path: string, init?: RequestInit): Promise<T> {
-    if (isDefined(this.origin)) {
-      const response = await window.fetch(`${this.origin}/${path}`, {
-        ...init,
-        credentials: 'include',
-      });
-      if (response.status >= 400) {
-        if (response.status === 403) {
-          throw new Error('Forbidden');
-        }
-      }
-      const result = await response.json();
-      if (response.status !== 200) {
-        if (isObject(result)) {
-          const {
-            error: { status, message },
-          } = result;
-          const errorStatus = isNumber(status) ? status : response.status;
-          const errorMessage = isText(message) ? message : 'No details about this error';
-          throw new Error(`${errorStatus}: ${errorMessage}`);
-        }
-      }
-      return result;
+    if (!isDefined(this.endpoint)) {
+      throw new AuthError('Please set Tachka endpoint');
     }
-    throw new Error("Tachka URL isn't defined");
+    if (!isDefined(this.token) && path !== 'login') {
+      throw new AuthError('Please set Tachka token');
+    }
+    const response = await window.fetch(`${this.endpoint}/${path}`, {
+      ...init,
+      headers: {
+        ...init?.headers,
+        authorization: `Bearer ${this.token}`,
+      },
+    });
+    const status = response.status;
+    if (status === 401 || status === 403) {
+      throw new AuthError('Please obtain new Tachka token');
+    }
+    const result = await response.json();
+    if (response.status !== 200) {
+      if (isObject(result)) {
+        const {
+          error: { status, message },
+        } = result;
+        const errorStatus = isNumber(status) ? status : response.status;
+        const errorMessage = isText(message) ? message : 'No details about this error';
+        throw new Error(`${errorStatus}: ${errorMessage}`);
+      }
+    }
+    return result;
   }
 }

@@ -43,7 +43,7 @@ export const RecordList: React.FC<ResourceComponentProps> = (props) => {
 
 const getDate = (record: unknown) => {
   if (isRecord(record)) {
-    return format(new Date(record.timestamp * 1000), '📅 yyyy/MM/dd HH:mm:ss 🕒 H:mm:ss');
+    return format(new Date(record.timestamp * 1000), '📅 yyyy/MM/dd 🕒 H:mm:ss');
   }
 };
 

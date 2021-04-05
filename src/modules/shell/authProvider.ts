@@ -1,37 +1,41 @@
 import { AuthProvider } from 'react-admin';
-import { tachka } from '../api-tachka';
 import { noop } from '../../generic/supply/utils';
+import { removeTachkaCred, setTachkaCred, tachka } from './tachkaClient';
+import { isAuthError } from '../api-tachka/utils';
 
 export const authProvider: AuthProvider = {
-  login: (params: { url: string; secret: string }) => {
-    tachka.setOrigin(params.url);
-    return tachka.login(params.secret);
-  },
-  checkError: (error) => {
-    console.log('checkError', error);
-    return Promise.resolve();
-  },
-  checkAuth: () => {
-    console.log('checkAuth');
-    return tachka
-      .recordList({ limit: 1 })
+  checkAuth: () =>
+    tachka
+      .recordListCount({ limit: 1 })
       .then(noop)
-      .catch(() => Promise.reject({ redirectTo: '/login', message: 'Unauthorized' }));
+      .catch(() => Promise.reject({ redirectTo: '/login', message: 'Unauthorized' })),
+  login: (params: { url: string; secret: string }) => {
+    const endpoint = params.url.trim().replace(/\/+$/, '');
+    tachka.endpoint = endpoint;
+    setTachkaCred({ endpoint });
+    return tachka.login(params.secret).then(({ token }) => {
+      tachka.token = token;
+      setTachkaCred({ token });
+    });
   },
-  logout: () => {
-    return tachka
+  logout: () =>
+    tachka
       .logout()
       .catch(noop)
       .then(() => {
-        tachka.removeOrigin();
-      });
-  },
-  getIdentity: () => {
-    console.log('getIdentity');
-    return Promise.resolve({ id: 1 });
-  },
-  getPermissions: () => {
-    console.log('getPermissions');
-    return Promise.resolve([]);
+        delete tachka.endpoint;
+        delete tachka.token;
+        removeTachkaCred();
+      }),
+  getIdentity: () => Promise.resolve({ id: 1 }),
+  getPermissions: () => Promise.resolve([]),
+  checkError: (error) => {
+    if (isAuthError(error)) {
+      delete tachka.token;
+      removeTachkaCred();
+      return Promise.reject();
+    } else {
+      return Promise.resolve();
+    }
   },
 };

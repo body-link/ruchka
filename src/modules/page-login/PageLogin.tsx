@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Login, useLogin, useNotify, useTranslate } from 'react-admin';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { isError, isText } from '../../generic/supply/type-guards';
-import { tachka } from '../api-tachka';
 import { Stack } from '../../generic/components/layout/Stack';
+import { tachka } from '../shell/tachkaClient';
 
 export const PageLogin = () => {
-  const [url, setUrl] = React.useState(tachka.origin ?? '');
+  const [url, setUrl] = React.useState(tachka.endpoint ?? '');
   const [secret, setSecret] = React.useState(
     "This secret from .env file won't work on production. Change it after deploy"
   );

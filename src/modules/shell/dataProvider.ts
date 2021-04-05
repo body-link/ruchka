@@ -1,6 +1,6 @@
 import { DataProvider } from 'react-admin';
-import { tachka } from '../api-tachka';
 import { isDefined } from '../../generic/supply/type-guards';
+import { tachka } from './tachkaClient';
 
 export enum EResource {
   Automation = 'automation',
