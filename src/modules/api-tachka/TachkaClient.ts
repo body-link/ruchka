@@ -1,8 +1,9 @@
 import { stringify } from 'qs';
 import { isDefined, isNumber, isObject, isText } from '../../generic/supply/type-guards';
-import { TOption } from '../../generic/supply/type-utils';
+import { TNullable, TOption } from '../../generic/supply/type-utils';
 import { IResOk } from './types/common';
 import { IRecord, IRecordListQuery } from './types/record';
+import { IAutomationStatusItem } from './types/automation';
 
 export class TachkaClient {
   public origin: TOption<string> = window.localStorage.getItem(this.lsKey) ?? undefined;
@@ -30,8 +31,36 @@ export class TachkaClient {
     return this.post<IResOk>('logout');
   }
 
+  recordGetByID<T extends string | string[]>(payload: T) {
+    return this.post<T extends [] ? IRecord[] : IRecord>('api/v1/record/get-by-id', payload);
+  }
+
   recordList(query?: IRecordListQuery) {
     return this.get<IRecord[]>('api/v1/record/list', query);
+  }
+
+  recordCount(query?: IRecordListQuery) {
+    return this.get<number>('api/v1/record/count', query);
+  }
+
+  recordListCount(query?: IRecordListQuery) {
+    return this.get<{ count: number; results: IRecord[] }>('api/v1/record/list-count', query);
+  }
+
+  recordCreate(payload: IRecord[]) {
+    return this.post<IRecord[]>('api/v1/record/create', payload);
+  }
+
+  recordUpdate(payload: Partial<IRecord> & Pick<IRecord, 'id'>) {
+    return this.post<IRecord>('api/v1/record/update', payload);
+  }
+
+  recordRemoveByID(payload: string | string[]) {
+    return this.post<{ affected: TNullable<number> }>('api/v1/record/remove-by-id', payload);
+  }
+
+  automationStatus() {
+    return this.get<IAutomationStatusItem[]>('automation/manager/status');
   }
 
   private async get<T = void>(path: string, query?: unknown) {

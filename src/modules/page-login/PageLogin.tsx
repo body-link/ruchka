@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Login, useLogin, useNotify, useTranslate } from 'react-admin';
-import { Button, CircularProgress, Stack, TextField } from 'material-ui-next';
+import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { isError, isText } from '../../generic/supply/type-guards';
 import { tachka } from '../api-tachka';
+import { Stack } from '../../generic/components/layout/Stack';
 
 export const PageLogin = () => {
   const [url, setUrl] = React.useState(tachka.origin ?? '');
