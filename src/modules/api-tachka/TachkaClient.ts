@@ -1,10 +1,11 @@
 import { stringify } from 'qs';
 import { isDefined, isNumber, isObject, isText } from '../../generic/supply/type-guards';
-import { TNullable, TOption } from '../../generic/supply/type-utils';
+import { IAffected, TOption } from '../../generic/supply/type-utils';
 import { IResOk } from './types/common';
 import { IRecord, IRecordListQuery } from './types/record';
 import { IAutomationStatusItem } from './types/automation';
 import { AuthError } from './utils';
+import { IIntegrationData, IIntegrationDataListItem, TIntegrationID } from './types/integration';
 
 export class TachkaClient {
   public endpoint: TOption<string>;
@@ -43,7 +44,19 @@ export class TachkaClient {
   }
 
   recordRemoveByID(payload: string | string[]) {
-    return this.post<{ affected: TNullable<number> }>('api/v1/record/remove-by-id', payload);
+    return this.post<IAffected>('api/v1/record/remove-by-id', payload);
+  }
+
+  integrationDataList() {
+    return this.get<IIntegrationDataListItem[]>('integration/data/list');
+  }
+
+  integrationDataSet(data: IIntegrationData) {
+    return this.post<IIntegrationData>('integration/data/set', data);
+  }
+
+  integrationDataRemove(id: TIntegrationID) {
+    return this.post<IAffected>('integration/data/remove', id);
   }
 
   automationStatus() {

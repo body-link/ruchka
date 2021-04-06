@@ -1,10 +1,19 @@
-import { DataProvider } from 'react-admin';
+import {
+  DataProvider,
+  GetListParams,
+  GetListResult,
+  GetOneParams,
+  GetOneResult,
+  UpdateParams,
+  UpdateResult,
+} from 'react-admin';
 import { isDefined } from '../../generic/supply/type-guards';
 import { tachka } from './tachkaClient';
 
 export enum EResource {
-  Automation = 'automation',
-  Record = 'record',
+  Automation = 'Automation',
+  Record = 'Record',
+  IntegrationData = 'IntegrationData',
 }
 
 const mapToHandlers = <Params, Res>(
@@ -19,7 +28,7 @@ const mapToHandlers = <Params, Res>(
 };
 
 export const dataProvider = {
-  getList: mapToHandlers({
+  getList: mapToHandlers<GetListParams, GetListResult>({
     [EResource.Automation]: () =>
       tachka
         .automationStatus()
@@ -37,10 +46,14 @@ export const dataProvider = {
           ...filters,
         })
         .then(({ count, results }) => ({ data: results, total: count })),
+    [EResource.IntegrationData]: () =>
+      tachka.integrationDataList().then((data) => ({ data, total: data.length })),
   }),
-  getOne: mapToHandlers({
+  getOne: mapToHandlers<GetOneParams, GetOneResult>({
     [EResource.Record]: ({ id }) =>
       tachka.recordGetByID(id as string).then((record) => ({ data: record })),
+    [EResource.IntegrationData]: ({ id }) =>
+      tachka.integrationDataList().then((data) => ({ data: data.find((item) => item.id === id)! })),
   }),
   getMany: mapToHandlers({
     [EResource.Record]: ({ ids }) =>
@@ -50,9 +63,17 @@ export const dataProvider = {
     console.log('getManyReference', resource, params);
     return Promise.resolve({ data: [], total: 4 });
   },
-  update: mapToHandlers({
+  update: mapToHandlers<UpdateParams, UpdateResult>({
     [EResource.Record]: ({ data }) =>
       tachka.recordUpdate(data).then((record) => ({ data: record })),
+    [EResource.IntegrationData]: ({ id, data: payload, previousData }) =>
+      isDefined(payload.data)
+        ? tachka
+            .integrationDataSet(payload)
+            .then((data) => ({ data: { ...data, schema: previousData.schema } }))
+        : tachka
+            .integrationDataRemove(id as string)
+            .then(() => ({ data: { id, schema: previousData.schema } })),
   }),
   updateMany: (resource, params) => {
     console.log('updateMany', resource, params);

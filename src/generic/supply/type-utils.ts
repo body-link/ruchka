@@ -22,3 +22,7 @@ export interface IReactCSS {
 export type TMutable<T> = {
   -readonly [P in keyof T]: T[P];
 };
+
+export interface IAffected {
+  affected: TNullable<number>;
+}

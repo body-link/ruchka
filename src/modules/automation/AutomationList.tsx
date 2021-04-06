@@ -3,7 +3,7 @@ import { List, BooleanField, Datagrid, TextField, ResourceComponentProps } from 
 
 export const AutomationList: React.FC<ResourceComponentProps> = (props) => {
   return (
-    <List {...props}>
+    <List {...props} pagination={false} bulkActionButtons={false} exporter={false}>
       <Datagrid rowClick="edit">
         <TextField source="id" />
         <TextField source="automation" />
