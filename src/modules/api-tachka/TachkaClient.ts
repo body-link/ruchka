@@ -3,7 +3,12 @@ import { isDefined, isNumber, isObject, isText } from '../../generic/supply/type
 import { IAffected, TOption } from '../../generic/supply/type-utils';
 import { IResOk } from './types/common';
 import { IRecord, IRecordListQuery } from './types/record';
-import { IAutomationStatusItem } from './types/automation';
+import {
+  IAutomationDefinition,
+  IAutomationInstance,
+  IAutomationInstanceStatus,
+  TAutomationInstanceID,
+} from './types/automation';
 import { AuthError } from './utils';
 import { IIntegrationData, IIntegrationDataListItem, TIntegrationID } from './types/integration';
 
@@ -59,8 +64,34 @@ export class TachkaClient {
     return this.post<IAffected>('integration/data/remove', id);
   }
 
-  automationStatus() {
-    return this.get<IAutomationStatusItem[]>('automation/manager/status');
+  automationInstanceList() {
+    return this.get<IAutomationInstance[]>('automation/instance/list');
+  }
+
+  automationInstanceDefinitions() {
+    return this.get<Record<string, IAutomationDefinition>>('automation/definitions');
+  }
+
+  automationInstanceCreate(payload: Omit<IAutomationInstance, 'id'>) {
+    return this.post<IAutomationInstance>('automation/instance/create', payload);
+  }
+
+  automationInstanceUpdate(
+    payload: Partial<Omit<IAutomationInstance, 'id' | 'automation'>> & { id: TAutomationInstanceID }
+  ) {
+    return this.post<IAutomationInstance>('automation/instance/update', payload);
+  }
+
+  automationInstanceRemove(id: TAutomationInstanceID) {
+    return this.post<IAffected>('automation/instance/remove', { id });
+  }
+
+  automationInstanceStatus(id: TAutomationInstanceID) {
+    return this.get<IAutomationInstanceStatus>(`automation/instance/status/${id}`);
+  }
+
+  automationInstanceStart(id: TAutomationInstanceID) {
+    return this.post<void>(`automation/instance/start/${id}`);
   }
 
   private async get<T = void>(path: string, query?: unknown) {

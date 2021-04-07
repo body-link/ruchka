@@ -31,7 +31,7 @@ export const dataProvider = {
   getList: mapToHandlers<GetListParams, GetListResult>({
     [EResource.Automation]: () =>
       tachka
-        .automationStatus()
+        .automationInstanceList()
         .then((data) => ({ data, total: data.length, validUntil: new Date() })),
     [EResource.Record]: ({
       pagination: { page, perPage },
