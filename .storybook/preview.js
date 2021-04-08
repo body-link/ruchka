@@ -1,3 +1,5 @@
+import '../src/init';
+
 export const parameters = {
   layout: 'fullscreen',
   actions: {

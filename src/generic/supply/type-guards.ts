@@ -1,7 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Observable } from 'rxjs';
+import { Atom, ReadOnlyAtom } from '@grammarly/focal';
+
 type Maybe<T> = T | null | undefined | unknown;
 
 type ObjectCheck<T> = T extends object ? T : Record<any, unknown>;
+
+export function isAnyAtom<T>(value: unknown): value is Atom<T> | ReadOnlyAtom<T> {
+  return value instanceof Observable && isFunction((value as any).view);
+}
+
+export function isAtom<T>(value: unknown): value is Atom<T> {
+  return isAnyAtom(value) && isFunction((value as any).set);
+}
+
+export function isReadOnlyAtom<T>(value: unknown): value is ReadOnlyAtom<T> {
+  return isAnyAtom(value) && isUndefined((value as any).set);
+}
 
 // tslint:disable-next-line: ban-types
 export function isFunction(value: unknown): value is Function {
