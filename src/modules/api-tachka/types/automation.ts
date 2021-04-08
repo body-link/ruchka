@@ -18,6 +18,6 @@ export interface IAutomationDefinition {
 }
 
 export interface IAutomationInstanceStatus {
-  status: string;
+  status: 'crashed' | 'working' | 'stopped';
   error?: string;
 }

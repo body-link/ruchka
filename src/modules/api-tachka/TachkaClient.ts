@@ -91,7 +91,7 @@ export class TachkaClient {
   }
 
   automationInstanceStart(id: TAutomationInstanceID) {
-    return this.post<void>(`automation/instance/start/${id}`);
+    return this.post<IResOk>(`automation/instance/start/${id}`);
   }
 
   private async get<T = void>(path: string, query?: unknown) {
