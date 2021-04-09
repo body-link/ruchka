@@ -33,12 +33,12 @@ export const Status = React.memo<IProps>(function Status({ id }) {
   return isDefined(status) ? (
     <>
       {status.status === 'working' ? (
-        <Stack isInline isCentered spacing="10px" height="30px">
+        <Stack isInline isCentered spacing={1} height={32}>
           <Typography>Working</Typography>
           <CircularProgress size={16} thickness={3} />
         </Stack>
       ) : (
-        <Stack isInline isCentered spacing="10px" height="30px">
+        <Stack isInline isCentered spacing={1} height={32}>
           {status.status === 'stopped' ? (
             <Typography>Idle</Typography>
           ) : (
@@ -88,7 +88,7 @@ export const Status = React.memo<IProps>(function Status({ id }) {
       )}
     </>
   ) : (
-    <Stack isMiddled height="30px">
+    <Stack isMiddled height={32}>
       {figStatus.inProgress && <CircularProgress size={16} thickness={3} />}
       {!figStatus.inProgress && isDefined(figStatus.error) && (
         <Typography color="error">{figStatus.error.message}</Typography>
