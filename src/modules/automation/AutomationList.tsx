@@ -1,16 +1,36 @@
 import React from 'react';
-import { BooleanField, Datagrid, List, ResourceComponentProps, TextField } from 'react-admin';
+import {
+  ListContextProvider,
+  ResourceComponentProps,
+  useListContext,
+  useListController,
+} from 'react-admin';
+import { Box } from '@material-ui/core';
+import { IAutomationInstance } from '../api-tachka/types/automation';
+import { AutomationInstanceCard } from './components/AutomationInstanceCard';
 
 export const AutomationList: React.FC<ResourceComponentProps> = (props) => {
+  const controllerProps = useListController(props);
   return (
-    <List {...props} pagination={false} bulkActionButtons={false} exporter={false}>
-      <Datagrid rowClick="edit">
-        <TextField label="ID" source="id" sortable={false} />
-        <TextField source="automation" sortable={false} />
-        <TextField source="schedule" sortable={false} />
-        <BooleanField label="Is ON" source="isOn" sortable={false} />
-        <TextField source="status" sortable={false} />
-      </Datagrid>
-    </List>
+    <ListContextProvider value={controllerProps}>
+      <Grid />
+    </ListContextProvider>
   );
 };
+
+export const Grid = React.memo(function Grid() {
+  const { ids, data } = useListContext();
+  return (
+    <Box
+      display="grid"
+      gridTemplateColumns="repeat(auto-fill, minmax(288px, 1fr))"
+      gridGap="16px"
+      p={2}
+    >
+      {ids.map((id) => {
+        const automationInstance = data[id] as IAutomationInstance;
+        return <AutomationInstanceCard key={id} automationInstance={automationInstance} />;
+      })}
+    </Box>
+  );
+});
