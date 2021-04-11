@@ -2,7 +2,8 @@ import React from 'react';
 import { Status } from './Status';
 import { Schedule } from './Schedule';
 import { Stack } from '../../../generic/components/layout/Stack';
-import { Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+import { AutomationInstanceCard } from './AutomationInstanceCard';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -35,3 +36,73 @@ export const StoryAutomationSchedule = () => {
 };
 
 StoryAutomationSchedule.storyName = '🛡️ Schedule';
+
+export const StoryAutomationInstanceCard = () => {
+  return (
+    <Box
+      display="grid"
+      gridTemplateColumns="repeat(auto-fill, minmax(288px, 1fr))"
+      gridGap="16px"
+      p={2}
+    >
+      <AutomationInstanceCard
+        automationInstance={{
+          id: 3,
+          automation: 'automation-google-photos-food',
+          name: 'SZ google photos',
+          options: {
+            recordGroup: 'photos-group-sz',
+            profile: 'sukazavr@gmail.com',
+            initialFromDate: '2019-09-01T00:00:00.000Z',
+          },
+          schedule: null,
+          isOn: true,
+        }}
+      />
+      <AutomationInstanceCard
+        automationInstance={{
+          id: 3,
+          automation: 'automation-google-photos-food',
+          name: 'SZ google photos',
+          options: {
+            recordGroup: 'photos-group-sz',
+            profile: 'sukazavr@gmail.com',
+            initialFromDate: '2019-09-01T00:00:00.000Z',
+          },
+          schedule: null,
+          isOn: false,
+        }}
+      />
+      <AutomationInstanceCard
+        automationInstance={{
+          id: 3,
+          automation: 'automation-google-photos-food',
+          name: 'SZ google photos',
+          options: {
+            recordGroup: 'photos-group-sz',
+            profile: 'sukazavr@gmail.com',
+            initialFromDate: '2019-09-01T00:00:00.000Z',
+          },
+          schedule: 'ASAP',
+          isOn: true,
+        }}
+      />
+      <AutomationInstanceCard
+        automationInstance={{
+          id: 3,
+          automation: 'automation-google-photos-food',
+          name: 'SZ google photos',
+          options: {
+            recordGroup: 'photos-group-sz',
+            profile: 'sukazavr@gmail.com',
+            initialFromDate: '2019-09-01T00:00:00.000Z',
+          },
+          schedule: '30 9 * * 1-5',
+          isOn: true,
+        }}
+      />
+    </Box>
+  );
+};
+
+StoryAutomationInstanceCard.storyName = '🛡️ AutomationInstanceCard';

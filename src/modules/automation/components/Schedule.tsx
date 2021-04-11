@@ -12,9 +12,9 @@ interface IProps {
 
 export const Schedule = React.memo<IProps>(function Schedule({ schedule }) {
   if (schedule === null) {
-    return <Typography>Manual start</Typography>;
+    return <Typography variant="body2">Manual start</Typography>;
   } else if (schedule === 'ASAP') {
-    return <Typography>Start once ASAP</Typography>;
+    return <Typography variant="body2">Start once ASAP</Typography>;
   }
 
   const humanReadable = cronToHumanReadable.toString(schedule, { use24HourTimeFormat: true });
@@ -24,9 +24,11 @@ export const Schedule = React.memo<IProps>(function Schedule({ schedule }) {
   );
 
   return (
-    <Stack>
-      <Typography>Scheduled: {humanReadable}</Typography>
-      <Typography>Next start: {nextEvent}</Typography>
+    <Stack spacing={0.5}>
+      <Typography variant="body2">Scheduled: {humanReadable}</Typography>
+      <Typography variant="body2" color="textSecondary">
+        Next start: {nextEvent}
+      </Typography>
     </Stack>
   );
 });
