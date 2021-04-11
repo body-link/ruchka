@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, shareReplay, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { Atom, ReadOnlyAtom } from '@grammarly/focal';
-import { ca } from './action-helpers';
 import { isAnyAtom, isDefined, isFunction, isNotNull } from './type-guards';
 import { isArrayEqual } from './utils';
 import { TOption } from './type-utils';
@@ -53,19 +52,16 @@ export function createUseWatcher<TDeps extends unknown[], TReturn>(
     const [deps$, initialize, terminate, result] = useMemo(() => {
       const currentDeps$ = new BehaviorSubject(deps);
       const didUnmount$ = new Subject<void>();
+      const didMount$ = new ReplaySubject<void>(1);
       const didUnmount = () => {
         didUnmount$.next();
         didUnmount$.complete();
+        didMount$.complete();
         currentDeps$.complete();
       };
-      const didMount = ca<void>();
-      const didMount$ = didMount.$.pipe(
-        shareReplay({
-          bufferSize: 1,
-          refCount: true,
-        }),
-        takeUntil(didUnmount$)
-      );
+      const didMount = () => {
+        didMount$.next();
+      };
       didMount$.subscribe();
       return [
         currentDeps$,

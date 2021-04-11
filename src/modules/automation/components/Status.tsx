@@ -1,11 +1,11 @@
 import React from 'react';
+import { cs, Signal } from 'rxjs-signal';
 import { Atom, Lens } from '@grammarly/focal';
 import {
   IAutomationInstanceStatus,
   TAutomationInstanceID,
 } from '../../api-tachka/types/automation';
 import { createUseWatcher, useObservable } from '../../../generic/supply/react-helpers';
-import { ca, TActionSignal } from '../../../generic/supply/action-helpers';
 import {
   atomProjection,
   createFig,
@@ -99,9 +99,9 @@ export const Status = React.memo<IProps>(function Status({ id }) {
 
 const useWatcher = createUseWatcher<
   [TAutomationInstanceID],
-  { start: TActionSignal; state$: Atom<IState> }
+  { start: Signal; state$: Atom<IState> }
 >(({ currentDeps$, didUnmount$ }) => {
-  const start = ca();
+  const start = cs();
   const state$ = Atom.create<IState>({
     figStatus: createFig(),
     figStart: createFig(),

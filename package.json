@@ -39,6 +39,7 @@
     "react-dom": "^16.9.56",
     "react-scripts": "4.0.3",
     "rxjs": "^6.6.7",
+    "rxjs-signal": "^0.2.0",
     "typescript": "^4.2.3"
   },
   "scripts": {
