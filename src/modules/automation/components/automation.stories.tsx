@@ -4,6 +4,8 @@ import { Schedule } from './Schedule';
 import { Stack } from '../../../generic/components/layout/Stack';
 import { Box, Typography } from '@material-ui/core';
 import { AutomationInstanceCard } from './AutomationInstanceCard';
+import { SelectAutomation } from './SelectAutomation';
+import { TOption } from '../../../generic/supply/type-utils';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -106,3 +108,14 @@ export const StoryAutomationInstanceCard = () => {
 };
 
 StoryAutomationInstanceCard.storyName = '🛡️ AutomationInstanceCard';
+
+export const StorySelectAutomation = () => {
+  const [automation, setAutomation] = React.useState<TOption<string>>();
+  return (
+    <Box p={2}>
+      <SelectAutomation onChange={setAutomation} automation={automation} />
+    </Box>
+  );
+};
+
+StorySelectAutomation.storyName = '🛡️ SelectAutomation';
