@@ -4,6 +4,7 @@ import {
   ResourceComponentProps,
   useListContext,
   useListController,
+  CreateButton,
 } from 'react-admin';
 import { Box } from '@material-ui/core';
 import { IAutomationInstance } from '../api-tachka/types/automation';
@@ -19,7 +20,7 @@ export const AutomationList: React.FC<ResourceComponentProps> = (props) => {
 };
 
 export const Grid = React.memo(function Grid() {
-  const { ids, data } = useListContext();
+  const { ids, data, basePath } = useListContext();
   return (
     <Box
       display="grid"
@@ -31,6 +32,7 @@ export const Grid = React.memo(function Grid() {
         const automationInstance = data[id] as IAutomationInstance;
         return <AutomationInstanceCard key={id} automationInstance={automationInstance} />;
       })}
+      <CreateButton basePath={basePath} variant="outlined" label="Add automation" />
     </Box>
   );
 });

@@ -1,4 +1,6 @@
 import {
+  CreateParams,
+  CreateResult,
   DataProvider,
   GetListParams,
   GetListResult,
@@ -79,9 +81,13 @@ export const dataProvider = {
     console.log('updateMany', resource, params);
     return Promise.resolve({ data: [] });
   },
-  create: mapToHandlers({
+  create: mapToHandlers<CreateParams, CreateResult>({
     [EResource.Record]: ({ data }) =>
       tachka.recordCreate([data]).then((records) => ({ data: records[0] })),
+    [EResource.Automation]: ({ data }) =>
+      tachka
+        .automationInstanceCreate(data)
+        .then((automationInstance) => ({ data: automationInstance })),
   }),
   delete: mapToHandlers({
     [EResource.Record]: ({ id }) =>

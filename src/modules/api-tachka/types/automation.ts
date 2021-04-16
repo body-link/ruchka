@@ -1,3 +1,5 @@
+import { JSONSchema7 } from 'json-schema';
+
 export type TAutomationInstanceID = number;
 
 export interface IAutomationInstance {
@@ -14,7 +16,7 @@ export interface IAutomationDefinition {
   name: string;
   description: string;
   recipe: string;
-  schemaOptions: unknown;
+  schemaOptions: JSONSchema7;
 }
 
 export interface IAutomationInstanceStatus {
