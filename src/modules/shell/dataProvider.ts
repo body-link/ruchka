@@ -31,10 +31,6 @@ const mapToHandlers = <Params, Res>(
 
 export const dataProvider = {
   getList: mapToHandlers<GetListParams, GetListResult>({
-    [EResource.Automation]: () =>
-      tachka
-        .automationInstanceList()
-        .then((data) => ({ data, total: data.length, validUntil: new Date() })),
     [EResource.Record]: ({
       pagination: { page, perPage },
       sort: { order },
@@ -50,12 +46,18 @@ export const dataProvider = {
         .then(({ count, results }) => ({ data: results, total: count })),
     [EResource.IntegrationData]: () =>
       tachka.integrationDataList().then((data) => ({ data, total: data.length })),
+    [EResource.Automation]: () =>
+      tachka.automationInstanceList().then((data) => ({ data, total: data.length })),
   }),
   getOne: mapToHandlers<GetOneParams, GetOneResult>({
     [EResource.Record]: ({ id }) =>
       tachka.recordGetByID(id as string).then((record) => ({ data: record })),
     [EResource.IntegrationData]: ({ id }) =>
       tachka.integrationDataList().then((data) => ({ data: data.find((item) => item.id === id)! })),
+    [EResource.Automation]: ({ id }) =>
+      tachka.automationInstanceList().then((data) => ({
+        data: data.find((item) => item.id === Number(id))!,
+      })),
   }),
   getMany: mapToHandlers({
     [EResource.Record]: ({ ids }) =>
@@ -76,6 +78,8 @@ export const dataProvider = {
         : tachka
             .integrationDataRemove(id as string)
             .then(() => ({ data: { id, schema: previousData.schema } })),
+    [EResource.Automation]: ({ data, id }) =>
+      tachka.automationInstanceUpdate({ id, ...data }).then((data) => ({ data })),
   }),
   updateMany: (resource, params) => {
     console.log('updateMany', resource, params);
@@ -92,6 +96,8 @@ export const dataProvider = {
   delete: mapToHandlers({
     [EResource.Record]: ({ id }) =>
       tachka.recordRemoveByID(id as string).then(() => ({ data: {} })),
+    [EResource.Automation]: ({ id }) =>
+      tachka.automationInstanceRemove(id as number).then(() => ({ data: {} })),
   }),
   deleteMany: mapToHandlers({
     [EResource.Record]: ({ ids }) =>

@@ -13,6 +13,7 @@ import { RecordEdit } from '../record/RecordEdit';
 import { IntegrationList } from '../integration/IntegrationList';
 import { IntegrationEdit } from '../integration/IntegrationEdit';
 import { AutomationCreate } from '../automation/AutomationCreate';
+import { AutomationEdit } from '../automation/AutomationEdit';
 
 export const Shell = () => (
   <Admin dataProvider={dataProvider} authProvider={authProvider} loginPage={PageLogin}>
@@ -28,6 +29,7 @@ export const Shell = () => (
       name={EResource.Automation}
       list={AutomationList}
       create={AutomationCreate}
+      edit={AutomationEdit}
       options={{ label: 'Automations' }}
       icon={AutomationsIcon}
     />

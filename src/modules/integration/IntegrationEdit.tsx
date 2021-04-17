@@ -6,6 +6,7 @@ import { Button, CircularProgress } from '@material-ui/core';
 import { EditContextProvider, EditProps, useEditController } from 'react-admin';
 import { IIntegrationDataListItem } from '../api-tachka/types/integration';
 import { Stack } from '../../generic/components/layout/Stack';
+import { isDefined } from '../../generic/supply/type-guards';
 
 export const IntegrationEdit: React.FC<EditProps> = (props) => {
   const controllerProps = useEditController({ ...props, mutationMode: 'optimistic' });
@@ -35,7 +36,7 @@ export const IntegrationEdit: React.FC<EditProps> = (props) => {
         onSubmit={value.onSubmit}
         disabled={isBlocked}
       >
-        <Stack isInline spacing={2} p="8px 0">
+        <Stack isInline spacing={2} p="8px 0" justifyContent="space-between">
           <Button
             variant="contained"
             color="primary"
@@ -47,7 +48,12 @@ export const IntegrationEdit: React.FC<EditProps> = (props) => {
             {!saving && <SaveIcon style={{ marginRight: '.5em' }} />}
             Save
           </Button>
-          <Button variant="outlined" size="large" onClick={value.onRemove} disabled={isBlocked}>
+          <Button
+            variant="outlined"
+            size="large"
+            onClick={value.onRemove}
+            disabled={!isDefined(data) || isBlocked}
+          >
             Remove configuration data
           </Button>
         </Stack>

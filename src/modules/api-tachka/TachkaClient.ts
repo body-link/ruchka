@@ -83,7 +83,7 @@ export class TachkaClient {
   }
 
   automationInstanceRemove(id: TAutomationInstanceID) {
-    return this.post<IAffected>('automation/instance/remove', { id });
+    return this.post<IAffected>('automation/instance/remove', id);
   }
 
   automationInstanceStatus(id: TAutomationInstanceID) {

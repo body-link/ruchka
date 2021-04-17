@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Card, CardActions, CardContent, Typography } from '@material-ui/core';
+import { EditButton } from 'react-admin';
+import { Card, CardActions, CardContent, Typography } from '@material-ui/core';
 import { IAutomationInstance } from '../../api-tachka/types/automation';
 import { Stack } from '../../../generic/components/layout/Stack';
 import { Status } from './Status';
@@ -32,7 +33,7 @@ export const AutomationInstanceCard = React.memo<IProps>(function AutomationInst
         )}
       </CardContent>
       <CardActions>
-        <Button size="small">Edit</Button>
+        <EditButton basePath="/automation" label="Edit" record={automationInstance} />
       </CardActions>
     </Card>
   );

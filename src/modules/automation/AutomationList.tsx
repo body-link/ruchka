@@ -32,7 +32,12 @@ export const Grid = React.memo(function Grid() {
         const automationInstance = data[id] as IAutomationInstance;
         return <AutomationInstanceCard key={id} automationInstance={automationInstance} />;
       })}
-      <CreateButton basePath={basePath} variant="outlined" label="Add automation" />
+      <CreateButton
+        basePath={basePath}
+        variant="outlined"
+        label="Add automation"
+        style={{ minHeight: 140 }}
+      />
     </Box>
   );
 });
