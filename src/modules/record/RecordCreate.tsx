@@ -32,13 +32,7 @@ export const RecordCreate: React.FC<CreateProps> = (props) => {
       <SimpleForm>
         <Stack isInline spacing={4}>
           <Stack spacing={1}>
-            <TextInput
-              label="ID"
-              source="id"
-              defaultValue={nanoid()}
-              validate={required()}
-              fullWidth
-            />
+            <TextInput label="ID" source="id" defaultValue={nanoid()} fullWidth />
             <TextInput source="group" validate={required()} />
             <TextInput source="bucket" validate={required()} />
             <TextInput source="provider" validate={required()} />
