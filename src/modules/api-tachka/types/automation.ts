@@ -19,6 +19,10 @@ export interface IAutomationDefinition {
   schemaOptions: JSONSchema7;
 }
 
+export interface IAutomationDefinitions {
+  [automation: string]: IAutomationDefinition;
+}
+
 export interface IAutomationInstanceStatus {
   status: 'crashed' | 'working' | 'stopped';
   error?: string;

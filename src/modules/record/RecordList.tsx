@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { cloneElement, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
 import {
   BulkActionProps,
   BulkDeleteButton,
@@ -8,6 +10,7 @@ import {
   Datagrid,
   Filter,
   FilterProps,
+  ListActionsProps,
   FunctionField,
   List,
   Pagination,
@@ -15,10 +18,18 @@ import {
   ResourceComponentProps,
   TextField,
   TextInput,
+  Button,
+  CreateButton,
+  ExportButton,
+  TopToolbar,
+  sanitizeListRestProps,
+  useListContext,
+  useResourceContext,
+  useResourceDefinition,
 } from 'react-admin';
+import ImportIcon from '@material-ui/icons/Publish';
 import { isRecord } from '../api-tachka/types/record';
 import { UnixTimestamp } from '../../generic/components/form/UnixTimestamp';
-import { format } from 'date-fns';
 import { RecordEdit } from './RecordEdit';
 
 export const RecordList: React.FC<ResourceComponentProps> = (props) => {
@@ -29,6 +40,7 @@ export const RecordList: React.FC<ResourceComponentProps> = (props) => {
       pagination={<RecordPagination />}
       sort={{ field: 'timestamp', order: 'DESC' }}
       filters={<RecordFilter />}
+      actions={<RecordListActions />}
       bulkActionButtons={<RecordBulkActionButtons />}
     >
       <Datagrid rowClick="expand" expand={<RecordEdit />}>
@@ -67,3 +79,46 @@ const RecordBulkActionButtons: React.FC<BulkActionProps> = (props) => (
     <BulkDeleteButton {...(props as BulkDeleteButtonProps)} />
   </>
 );
+
+const RecordListActions: React.FC<ListActionsProps> = (props) => {
+  const { className, exporter, filters, ...rest } = props;
+  const {
+    currentSort,
+    displayedFilters,
+    filterValues,
+    basePath,
+    selectedIds,
+    showFilter,
+    total,
+  } = useListContext(props);
+  const resource = useResourceContext(rest);
+  const { hasCreate } = useResourceDefinition(rest);
+  return useMemo(
+    () => (
+      <TopToolbar className={className} {...sanitizeListRestProps(rest)}>
+        {filters &&
+          cloneElement(filters, {
+            resource,
+            showFilter,
+            displayedFilters,
+            filterValues,
+            context: 'button',
+          })}
+        {hasCreate && <CreateButton basePath={basePath} />}
+        {exporter !== false && (
+          <ExportButton
+            disabled={total === 0}
+            resource={resource}
+            sort={currentSort}
+            filterValues={filterValues}
+          />
+        )}
+        <Button component={Link} to="/import/csv" label="Import csv">
+          <ImportIcon />
+        </Button>
+      </TopToolbar>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [resource, displayedFilters, filterValues, selectedIds, filters, total]
+  );
+};

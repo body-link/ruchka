@@ -6,5 +6,5 @@ import { JsonEditor, JsonEditorProps } from 'jsoneditor-react';
 import 'jsoneditor-react/es/editor.min.css';
 
 export const JSONField: React.FC<JsonEditorProps> = (props) => (
-  <JsonEditor {...props} theme="ace/theme/github" />
+  <JsonEditor theme="ace/theme/github" {...props} />
 );

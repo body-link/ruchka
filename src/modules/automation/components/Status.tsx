@@ -28,7 +28,8 @@ interface IProps {
 
 export const Status = React.memo<IProps>(function Status({ id }) {
   const { start, state$ } = useWatcher([id]);
-  const { status, figStatus, figStart } = useObservable(state$);
+  const { figStatus, figStart } = useObservable(state$);
+  const status = figStatus.value;
   const [anchorEl, setAnchorEl] = React.useState<HTMLSpanElement | null>(null);
   return isDefined(status) ? (
     <>
@@ -103,30 +104,33 @@ const useWatcher = createUseWatcher<
 >(({ currentDeps$, didUnmount$ }) => {
   const start = cs();
   const state$ = Atom.create<IState>({
-    figStatus: createFig(),
+    figStatus: createFig<IAutomationInstanceStatus>(),
     figStart: createFig(),
   });
 
   const getStatus$ = defer(() => tachka.automationInstanceStatus(currentDeps$.getValue()[0])).pipe(
-    figProjection(state$.lens('figStatus'), { isErrorTransparent: true }),
-    retryStrategy(),
-    atomProjection(state$.lens('status'))
+    figProjection(state$.lens('figStatus'), { errorHandlingStrategy: 'pass' }),
+    retryStrategy()
   );
 
   const start$ = defer(() => tachka.automationInstanceStart(currentDeps$.getValue()[0])).pipe(
-    figProjection(state$.lens('figStart')),
+    figProjection(state$.lens('figStart'), { skipValue: true }),
     atomProjection(
-      state$.lens('status').lens(
-        Lens.create<TOption<IAutomationInstanceStatus>, unknown>(
-          () => {},
-          () => ({ status: 'working' })
+      state$
+        .lens('figStatus')
+        .lens('value')
+        .lens(
+          Lens.create<TOption<IAutomationInstanceStatus>, unknown>(
+            () => {},
+            () => ({ status: 'working' })
+          )
         )
-      )
     )
   );
 
   state$
-    .lens('status')
+    .view('figStatus')
+    .view('value')
     .view((v) => (v?.status ?? 'working') === 'working')
     .pipe(
       switchMap((isWorking) =>
@@ -148,7 +152,6 @@ const useWatcher = createUseWatcher<
 });
 
 interface IState {
-  status?: IAutomationInstanceStatus;
-  figStatus: IFig;
+  figStatus: IFig<TOption<IAutomationInstanceStatus>>;
   figStart: IFig;
 }

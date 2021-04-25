@@ -1,5 +1,3 @@
-import { CSSProperties } from 'react';
-
 export type TIdentifier = string | number;
 
 export type TReal = boolean | string | number;
@@ -14,15 +12,6 @@ export type TUnboxArray<T> = T extends (infer U)[] ? U : T;
 
 export type TNoop = () => void;
 
-export interface IReactCSS {
-  className?: string;
-  style?: CSSProperties;
-}
-
 export type TMutable<T> = {
   -readonly [P in keyof T]: T[P];
 };
-
-export interface IAffected {
-  affected: TNullable<number>;
-}

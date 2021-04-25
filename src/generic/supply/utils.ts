@@ -1,7 +1,9 @@
-import { TOption, TPrimitive } from './type-utils';
+import { TNoop, TOption, TPrimitive } from './type-utils';
 import { isArray, isDefined, isObject } from './type-guards';
 
-export const noop = () => {};
+export const noop: TNoop = () => {};
+
+export const getTimestamp = () => Math.floor(Date.now() / 1000);
 
 export const isArrayEqual = <T>(
   arrA: TOption<T[]>,

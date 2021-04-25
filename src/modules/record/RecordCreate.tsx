@@ -15,6 +15,7 @@ import { nanoid } from 'nanoid';
 import { UnixTimestamp } from '../../generic/components/form/UnixTimestamp';
 import { Stack } from '../../generic/components/layout/Stack';
 import { JSONInput } from '../../generic/components/form/JSONInput';
+import { getTimestamp } from '../../generic/supply/utils';
 
 export const RecordCreate: React.FC<CreateProps> = (props) => {
   const notify = useNotify();
@@ -39,7 +40,7 @@ export const RecordCreate: React.FC<CreateProps> = (props) => {
             <Stack isInline spacing={2}>
               <UnixTimestamp
                 source="timestamp"
-                defaultValue={Math.floor(Date.now() / 1000)}
+                defaultValue={getTimestamp()}
                 validate={required()}
               />
               <NumberInput

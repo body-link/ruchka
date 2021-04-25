@@ -27,14 +27,14 @@ export const AutomationDefinition = React.memo<IProps>(function AutomationDefini
   automation,
   onChange,
 }) {
-  const { fig, value } = useObservable(cacheDefinitions$);
-  const isBlocked = fig.inProgress || isDefined(fig.error);
+  const { value, error, inProgress } = useObservable(cacheDefinitions$);
+  const isBlocked = inProgress || isDefined(error);
   return (
     <Paper variant="outlined">
       {isBlocked && (
         <Stack isMiddled height={500} p={4} boxSizing="border-box">
-          {fig.inProgress && <CircularProgress thickness={3} />}
-          {!fig.inProgress && isDefined(fig.error) && (
+          {inProgress && <CircularProgress thickness={3} />}
+          {!inProgress && isDefined(error) && (
             <Alert
               severity="error"
               action={
@@ -43,7 +43,7 @@ export const AutomationDefinition = React.memo<IProps>(function AutomationDefini
                 </Button>
               }
             >
-              {fig.error.message}
+              {error.message}
             </Alert>
           )}
         </Stack>

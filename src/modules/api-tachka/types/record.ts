@@ -1,13 +1,21 @@
 import { isDefined, isObject } from '../../../generic/supply/type-guards';
 
-export interface IRecord {
-  id: string;
+export interface IRecordCreate {
+  id?: string;
   group: string;
   bucket: string;
   provider: string;
   timestamp: number;
   offset: number | null;
   data: unknown;
+}
+
+export interface IRecordUpdate extends Partial<IRecordCreate> {
+  id: string;
+}
+
+export interface IRecord extends IRecordCreate {
+  id: string;
 }
 
 export interface IRecordListQuery {

@@ -1,10 +1,10 @@
 import { stringify } from 'qs';
-import { isDefined, isNumber, isObject, isText } from '../../generic/supply/type-guards';
-import { IAffected, TOption } from '../../generic/supply/type-utils';
-import { IResOk } from './types/common';
-import { IRecord, IRecordListQuery } from './types/record';
+import { isArray, isDefined, isNumber, isObject, isText } from '../../generic/supply/type-guards';
+import { TOption } from '../../generic/supply/type-utils';
+import { IResAffected, IResCreated, IResOk } from './types/common';
+import { IRecord, IRecordCreate, IRecordListQuery, IRecordUpdate } from './types/record';
 import {
-  IAutomationDefinition,
+  IAutomationDefinitions,
   IAutomationInstance,
   IAutomationInstanceStatus,
   TAutomationInstanceID,
@@ -40,16 +40,24 @@ export class TachkaClient {
     return this.get<{ count: number; results: IRecord[] }>('api/v1/record/list-count', query);
   }
 
-  recordCreate(payload: IRecord[]) {
-    return this.post<IRecord[]>('api/v1/record/create', payload);
+  recordValidate(payload: unknown[]) {
+    return this.post<IResOk>('api/v1/record/validate', payload);
   }
 
-  recordUpdate(payload: Partial<IRecord> & Pick<IRecord, 'id'>) {
+  recordCreate(payload: IRecordCreate[]) {
+    return this.post<IResCreated>('api/v1/record/create', payload);
+  }
+
+  recordAdd(payload: IRecordCreate[]) {
+    return this.post<IResCreated>('api/v1/record/add', payload);
+  }
+
+  recordUpdate(payload: IRecordUpdate) {
     return this.post<IRecord>('api/v1/record/update', payload);
   }
 
   recordRemoveByID(payload: string | string[]) {
-    return this.post<IAffected>('api/v1/record/remove-by-id', payload);
+    return this.post<IResAffected>('api/v1/record/remove-by-id', payload);
   }
 
   integrationDataList() {
@@ -61,7 +69,7 @@ export class TachkaClient {
   }
 
   integrationDataRemove(id: TIntegrationID) {
-    return this.post<IAffected>('integration/data/remove', id);
+    return this.post<IResAffected>('integration/data/remove', id);
   }
 
   automationInstanceList() {
@@ -69,7 +77,7 @@ export class TachkaClient {
   }
 
   automationInstanceDefinitions() {
-    return this.get<Record<string, IAutomationDefinition>>('automation/definitions');
+    return this.get<IAutomationDefinitions>('automation/definitions');
   }
 
   automationInstanceCreate(payload: Omit<IAutomationInstance, 'id'>) {
@@ -83,7 +91,7 @@ export class TachkaClient {
   }
 
   automationInstanceRemove(id: TAutomationInstanceID) {
-    return this.post<IAffected>('automation/instance/remove', id);
+    return this.post<IResAffected>('automation/instance/remove', id);
   }
 
   automationInstanceStatus(id: TAutomationInstanceID) {
@@ -131,11 +139,16 @@ export class TachkaClient {
     if (response.status !== 200) {
       if (isObject(result)) {
         const {
-          error: { status, message },
+          error: { status, message, data },
         } = result;
         const errorStatus = isNumber(status) ? status : response.status;
         const errorMessage = isText(message) ? message : 'No details about this error';
-        throw new Error(`${errorStatus}: ${errorMessage}`);
+        let errorExtra = '';
+        if (isArray(data) && data.length > 0) {
+          const item = data[0];
+          errorExtra = `, ${isText(item) ? item : `data: ${JSON.stringify(item)}`}`;
+        }
+        throw new Error(`${errorStatus}: ${errorMessage}${errorExtra}`);
       }
     }
     return result;

@@ -86,8 +86,7 @@ export const dataProvider = {
     return Promise.resolve({ data: [] });
   },
   create: mapToHandlers<CreateParams, CreateResult>({
-    [EResource.Record]: ({ data }) =>
-      tachka.recordCreate([data]).then((records) => ({ data: records[0] })),
+    [EResource.Record]: ({ data }) => tachka.recordCreate([data]).then(() => ({ data })),
     [EResource.Automation]: ({ data }) =>
       tachka
         .automationInstanceCreate(data)

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Route } from 'react-router-dom';
 import { Admin, Resource } from 'react-admin';
 import IntegrationsIcon from '@material-ui/icons/SettingsInputComponent';
 import RecordsIcon from '@material-ui/icons/InsertDriveFile';
@@ -14,9 +15,15 @@ import { IntegrationList } from '../integration/IntegrationList';
 import { IntegrationEdit } from '../integration/IntegrationEdit';
 import { AutomationCreate } from '../automation/AutomationCreate';
 import { AutomationEdit } from '../automation/AutomationEdit';
+import { PageCsvImporter } from '../csv-importer/PageCsvImporter';
 
 export const Shell = () => (
-  <Admin dataProvider={dataProvider} authProvider={authProvider} loginPage={PageLogin}>
+  <Admin
+    dataProvider={dataProvider}
+    authProvider={authProvider}
+    loginPage={PageLogin}
+    customRoutes={[<Route path="/import/csv" component={PageCsvImporter} />]}
+  >
     <Resource
       name={EResource.Record}
       list={RecordList}

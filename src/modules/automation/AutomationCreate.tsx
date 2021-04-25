@@ -56,8 +56,8 @@ const None = () => null;
 
 export const FormContent = React.memo<{ save: (data: unknown) => void; isBlocked: boolean }>(
   function FormContent({ save, isBlocked }) {
-    const { fig, value: definitions } = useObservable(cacheDefinitions$);
-    const areDefinitionsReady = !(fig.inProgress || isDefined(fig.error));
+    const { value: definitions, error, inProgress } = useObservable(cacheDefinitions$);
+    const areDefinitionsReady = !(inProgress || isDefined(error));
 
     const formState = React.useRef<IFormState>({
       valid: false,
