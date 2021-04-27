@@ -14,5 +14,18 @@ export interface IIntegrationDataListItem {
   schema: JSONSchema7;
 }
 
+export interface IIntegrationAuthCreate {
+  integration: TIntegrationID;
+  profile: string;
+  data: unknown;
+}
+
+export interface IIntegrationAuth extends IIntegrationAuthCreate {
+  id: number;
+}
+
 export const isIntegrationDataListItem = (value: unknown): value is IIntegrationDataListItem =>
   isObject(value) && isDefined(value.id) && isDefined(value.schema);
+
+export const isIntegrationAuthListItem = (value: unknown): value is IIntegrationAuth =>
+  isObject(value) && isDefined(value.id) && isDefined(value.integration);

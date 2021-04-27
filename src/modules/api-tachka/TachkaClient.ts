@@ -10,7 +10,13 @@ import {
   TAutomationInstanceID,
 } from './types/automation';
 import { AuthError } from './utils';
-import { IIntegrationData, IIntegrationDataListItem, TIntegrationID } from './types/integration';
+import {
+  IIntegrationAuth,
+  IIntegrationAuthCreate,
+  IIntegrationData,
+  IIntegrationDataListItem,
+  TIntegrationID,
+} from './types/integration';
 
 export class TachkaClient {
   public endpoint: TOption<string>;
@@ -70,6 +76,22 @@ export class TachkaClient {
 
   integrationDataRemove(id: TIntegrationID) {
     return this.post<IResAffected>('integration/data/remove', id);
+  }
+
+  integrationAuthList() {
+    return this.get<IIntegrationAuth[]>('integration/auth/list');
+  }
+
+  integrationAuthCreate(data: IIntegrationAuthCreate) {
+    return this.post<IIntegrationAuth>('integration/auth/create', data);
+  }
+
+  integrationAuthUpdate(data: IIntegrationData) {
+    return this.post<IIntegrationAuth>('integration/auth/update', data);
+  }
+
+  integrationAuthRemove(id: number) {
+    return this.post<IResAffected>('integration/auth/remove', id);
   }
 
   automationInstanceList() {
