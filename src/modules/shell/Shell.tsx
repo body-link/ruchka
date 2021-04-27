@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Route } from 'react-router-dom';
 import { Admin, Resource } from 'react-admin';
 import IntegrationsIcon from '@material-ui/icons/SettingsInputComponent';
+import IntegrationsAuthIcon from '@material-ui/icons/AccountBox';
 import RecordsIcon from '@material-ui/icons/InsertDriveFile';
 import AutomationsIcon from '@material-ui/icons/Android';
 import { dataProvider, EResource } from './dataProvider';
@@ -16,6 +17,9 @@ import { IntegrationEdit } from '../integration/IntegrationEdit';
 import { AutomationCreate } from '../automation/AutomationCreate';
 import { AutomationEdit } from '../automation/AutomationEdit';
 import { PageCsvImporter } from '../csv-importer/PageCsvImporter';
+import { IntegrationAuthList } from '../integration-auth/IntegrationAuthList';
+import { IntegrationAuthEdit } from '../integration-auth/IntegrationAuthEdit';
+import { IntegrationAuthCreate } from '../integration-auth/IntegrationAuthCreate';
 
 export const Shell = () => (
   <Admin
@@ -46,6 +50,14 @@ export const Shell = () => (
       edit={IntegrationEdit}
       options={{ label: 'Integrations' }}
       icon={IntegrationsIcon}
+    />
+    <Resource
+      name={EResource.IntegrationAuth}
+      list={IntegrationAuthList}
+      create={IntegrationAuthCreate}
+      edit={IntegrationAuthEdit}
+      options={{ label: 'Integrations Auths' }}
+      icon={IntegrationsAuthIcon}
     />
   </Admin>
 );
