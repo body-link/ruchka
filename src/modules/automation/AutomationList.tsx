@@ -5,6 +5,7 @@ import {
   useListContext,
   useListController,
   CreateButton,
+  Title,
 } from 'react-admin';
 import { Box } from '@material-ui/core';
 import { IAutomationInstance } from '../api-tachka/types/automation';
@@ -14,6 +15,7 @@ export const AutomationList: React.FC<ResourceComponentProps> = (props) => {
   const controllerProps = useListController(props);
   return (
     <ListContextProvider value={controllerProps}>
+      <Title title="Automations" />
       <Grid />
     </ListContextProvider>
   );
